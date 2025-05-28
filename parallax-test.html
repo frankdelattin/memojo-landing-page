@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallax Test</title>
+    <link rel="stylesheet" href="css/parallax.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .content {
+            padding: 20px;
+            background: #f5f5f7;
+            color: #333;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            color: #0066cc;
+        }
+        
+        button {
+            padding: 10px 15px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .test-container {
+            height: 100vh;
+            overflow-y: auto;
+            background: linear-gradient(170deg, #f5f5f7 0%, white 100%);
+        }
+        
+        .scrolling-content {
+            position: relative;
+            height: 300vh; /* Extra height to allow scrolling */
+        }
+        
+        .parallax-image {
+            position: fixed;
+            top: 20%;
+            right: 10%;
+            width: 40%;
+            z-index: 1;
+            transform: translateY(0);
+            transition: transform 0.1s linear;
+        }
+        
+        .parallax-text {
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 40%;
+            padding: 20px;
+            transform: translateY(0);
+            transition: transform 0.1s linear;
+            z-index: 2;
+        }
+        
+        .placeholder {
+            height: 200vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Parallax Scrolling Test</h1>
+        <p>This is a simple test page to demonstrate the parallax scrolling effect working correctly.</p>
+        <button id="test-button">Run Parallax Test</button>
+    </div>
+    
+    <div id="test-container" class="test-container" style="display: none;">
+        <div class="scrolling-content">
+            <div class="parallax-text" id="parallax-text">
+                <h1>Your Memories, Organized Automatically</h1>
+                <h2>From Chaos to Connection</h2>
+                <p>Memojo transforms your photo chaos into structured albums of your most important life moments. Reconnect with your memories, bring them to your fingertips.</p>
+            </div>
+            
+            <img src="images/Search optim.gif" alt="Memojo App" class="parallax-image" id="parallax-image">
+            
+            <div class="placeholder"></div>
+        </div>
+        
+        <div class="demo-controls">
+            <div>Scroll down to see the effect</div>
+            <div id="scroll-info">Scroll position: 0px</div>
+            <button class="demo-close" id="close-test">Close Test</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testButton = document.getElementById('test-button');
+            const testContainer = document.getElementById('test-container');
+            const closeButton = document.getElementById('close-test');
+            const parallaxText = document.getElementById('parallax-text');
+            const parallaxImage = document.getElementById('parallax-image');
+            const scrollInfo = document.getElementById('scroll-info');
+            
+            testButton.addEventListener('click', function() {
+                testContainer.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeButton.addEventListener('click', function() {
+                testContainer.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            testContainer.addEventListener('scroll', function() {
+                const scrollTop = testContainer.scrollTop;
+                
+                // Update scroll position info
+                scrollInfo.textContent = `Scroll position: ${scrollTop}px`;
+                
+                // Apply extreme parallax
+                // Text moves very fast (80% of scroll)
+                parallaxText.style.transform = `translateY(${scrollTop * 0.8}px)`;
+                
+                // Image barely moves (3% of scroll)
+                parallaxImage.style.transform = `translateY(${scrollTop * 0.03}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

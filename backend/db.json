@@ -1,0 +1,34 @@
+{
+  "votes": {
+    "feature-find": {
+      "low": 0,
+      "medium": 0,
+      "high": 0
+    },
+    "feature-share": {
+      "low": 2,
+      "medium": 1,
+      "high": 0
+    },
+    "feature-diary": {
+      "low": 0,
+      "medium": 1,
+      "high": 1
+    }
+  },
+  "subscriptions": {
+    "feature-find": [],
+    "feature-share": [
+      "test@example.com"
+    ],
+    "feature-diary": [],
+    "platform-android": [
+      "betauser@example.com"
+    ],
+    "platform-ios": [
+      "iosuser@example.com",
+      "franky.pol@flikkie.be",
+      "test123@example.com"
+    ]
+  }
+}

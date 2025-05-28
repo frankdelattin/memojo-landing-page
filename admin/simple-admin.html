@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memojo Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #0066cc;
+      --text-color: #333333;
+      --light-gray: #f5f5f7;
+      --apple-blue: #0071e3;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--light-gray);
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      color: var(--primary-color);
+      margin-top: 0;
+    }
+    
+    .login-form {
+      margin-bottom: 20px;
+    }
+    
+    input {
+      padding: 8px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    
+    button {
+      padding: 8px 16px;
+      background-color: var(--apple-blue);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+    
+    pre {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      overflow: auto;
+    }
+    
+    .section {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Memojo Admin Dashboard</h1>
+    
+    <div id="login-section">
+      <div class="login-form">
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="login-btn">Login</button>
+      </div>
+      <div id="login-error" class="error hidden">Invalid credentials</div>
+    </div>
+    
+    <div id="data-section" class="hidden">
+      <h2>Welcome, <span id="user-display">Admin</span></h2>
+      <button id="logout-btn">Logout</button>
+      
+      <div class="section">
+        <h3>Votes</h3>
+        <table id="votes-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Low</th>
+              <th>Medium</th>
+              <th>High</th>
+            </tr>
+          </thead>
+          <tbody id="votes-body"></tbody>
+        </table>
+      </div>
+      
+      <div class="section">
+        <h3>Subscriptions</h3>
+        <table id="subscriptions-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Emails</th>
+            </tr>
+          </thead>
+          <tbody id="subscriptions-body"></tbody>
+        </table>
+      </div>
+      
+      <div class="section">
+        <h3>Raw JSON Data</h3>
+        <pre id="json-display"></pre>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // DOM Elements
+    const loginSection = document.getElementById('login-section');
+    const dataSection = document.getElementById('data-section');
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const loginError = document.getElementById('login-error');
+    const userDisplay = document.getElementById('user-display');
+    const jsonDisplay = document.getElementById('json-display');
+    const votesBody = document.getElementById('votes-body');
+    const subscriptionsBody = document.getElementById('subscriptions-body');
+    
+    // Feature display names
+    const featureNames = {
+      'feature-find': 'MemojoFind',
+      'feature-share': 'MemojoShare',
+      'feature-diary': 'MemojoDiary',
+      'platform-android': 'Android Beta',
+      'platform-ios': 'iOS Beta'
+    };
+    
+    // Check if user is already logged in
+    function checkLoginStatus() {
+      const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+      if (isLoggedIn) {
+        userDisplay.textContent = sessionStorage.getItem('username') || 'Admin';
+        loginSection.classList.add('hidden');
+        dataSection.classList.remove('hidden');
+        fetchData();
+      }
+    }
+    
+    // Login function
+    loginBtn.addEventListener('click', function() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      // Simple credential check
+      if (username === 'admin' && password === 'memojo2025admin') {
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('username', username);
+        userDisplay.textContent = username;
+        loginSection.classList.add('hidden');
+        dataSection.classList.remove('hidden');
+        fetchData();
+      } else {
+        loginError.classList.remove('hidden');
+        setTimeout(() => {
+          loginError.classList.add('hidden');
+        }, 3000);
+      }
+    });
+    
+    // Logout function
+    logoutBtn.addEventListener('click', function() {
+      sessionStorage.removeItem('isLoggedIn');
+      sessionStorage.removeItem('username');
+      dataSection.classList.add('hidden');
+      loginSection.classList.remove('hidden');
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    });
+    
+    // Fetch data from db.json
+    function fetchData() {
+      // For AWS Amplify deployment, directly read the file
+      fetch('../backend/db.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to load data: ' + response.status);
+          }
+          return response.json();
+        })
+        .then(data => {
+          displayData(data);
+          console.log('Data loaded successfully');
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          jsonDisplay.textContent = 'Error loading data: ' + error.message;
+        });
+    }
+    
+    // Display data in the dashboard
+    function displayData(data) {
+      // Display raw JSON
+      jsonDisplay.textContent = JSON.stringify(data, null, 2);
+      
+      // Clear previous data
+      votesBody.innerHTML = '';
+      subscriptionsBody.innerHTML = '';
+      
+      // Display votes
+      Object.entries(data.votes).forEach(([feature, votes]) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${featureNames[feature] || feature}</td>
+          <td>${votes.low}</td>
+          <td>${votes.medium}</td>
+          <td>${votes.high}</td>
+        `;
+        votesBody.appendChild(row);
+      });
+      
+      // Display subscriptions
+      Object.entries(data.subscriptions).forEach(([feature, emails]) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${featureNames[feature] || feature}</td>
+          <td>${emails.join(', ')}</td>
+        `;
+        subscriptionsBody.appendChild(row);
+      });
+    }
+    
+    // Check login status on page load
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
+  </script>
+</body>
+</html>

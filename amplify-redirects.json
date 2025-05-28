@@ -1,0 +1,14 @@
+[
+  {
+    "source": "/admin/<*>",
+    "target": "/admin/simple-admin.html",
+    "status": "200",
+    "condition": null
+  },
+  {
+    "source": "/api/data",
+    "target": "/backend/db.json",
+    "status": "200",
+    "condition": null
+  }
+]

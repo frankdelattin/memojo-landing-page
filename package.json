@@ -1,0 +1,14 @@
+{
+  "name": "memojo-landing-page",
+  "version": "1.0.0",
+  "description": "Memojo Landing Page with photo organization tools showcase",
+  "main": "simple-server.js",
+  "scripts": {
+    "start": "node simple-server.js",
+    "build": "echo 'No build step required for static site'"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "http": "^0.0.1-security"
+  }
+}

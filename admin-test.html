@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Authentication Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #0066cc;
+      --secondary-color: #333333;
+      --background-color: #ffffff;
+      --text-color: #333333;
+      --light-gray: #f5f5f7;
+      --medium-gray: #86868b;
+      --dark-gray: #1d1d1f;
+      --apple-blue: #0071e3;
+      --apple-green: #34c759;
+      --error-color: #ff3b30;
+      --border-radius: 12px;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1, h2, h3 {
+      margin-bottom: 20px;
+    }
+    
+    .panel {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .test-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    input {
+      padding: 10px;
+      border: 1px solid var(--medium-gray);
+      border-radius: 8px;
+    }
+    
+    button {
+      padding: 10px 15px;
+      background-color: var(--apple-blue);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    
+    button:hover {
+      background-color: #0058b7;
+    }
+    
+    .log-container {
+      background-color: #222;
+      color: #eee;
+      padding: 15px;
+      border-radius: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: monospace;
+      margin-bottom: 20px;
+    }
+    
+    .log-entry {
+      margin-bottom: 5px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 5px;
+    }
+    
+    .success { color: #44ff44; }
+    .error { color: #ff4444; }
+    .info { color: #4499ff; }
+    
+    .tab-container {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #ddd;
+      border-radius: 8px 8px 0 0;
+      border: 1px solid #ccc;
+      border-bottom: none;
+    }
+    
+    .tab.active {
+      background-color: white;
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+      background-color: var(--light-gray);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Authentication Test</h1>
+    
+    <div class="tab-container">
+      <div class="tab active" data-tab="login">Login Test</div>
+      <div class="tab" data-tab="dashboard">Dashboard Simulation</div>
+      <div class="tab" data-tab="diagnostics">Diagnostics</div>
+    </div>
+    
+    <div class="tab-content active" id="login-tab">
+      <div class="panel">
+        <h2>Login Simulation</h2>
+        <p>Test our fixed authentication system with HTTP-only cookies</p>
+        
+        <div class="test-form">
+          <input type="text" id="username" placeholder="Username" value="admin">
+          <input type="password" id="password" placeholder="Password" value="memojo2025admin">
+          <button id="login-btn">Login</button>
+        </div>
+        
+        <div class="log-container" id="login-log"></div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="dashboard-tab">
+      <div class="panel">
+        <h2>Dashboard Simulation</h2>
+        <div class="user-controls" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+          <span id="user-display">Not logged in</span>
+          <button id="logout-btn">Logout</button>
+        </div>
+        
+        <button id="fetch-data-btn">Fetch Data</button>
+        
+        <h3>Feature Votes</h3>
+        <table id="votes-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Low</th>
+              <th>Medium</th>
+              <th>High</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be inserted here -->
+          </tbody>
+        </table>
+        
+        <h3>Subscriptions</h3>
+        <table id="subscriptions-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Email Count</th>
+              <th>Emails</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be inserted here -->
+          </tbody>
+        </table>
+        
+        <div class="log-container" id="dashboard-log"></div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="diagnostics-tab">
+      <div class="panel">
+        <h2>Diagnostics</h2>
+        
+        <h3>Cookie Information</h3>
+        <div id="cookie-info" class="log-container">
+          <!-- Cookie info will be displayed here -->
+        </div>
+        
+        <h3>Authentication Status</h3>
+        <div id="auth-status" class="log-container">
+          <!-- Auth status will be displayed here -->
+        </div>
+        
+        <div class="test-buttons">
+          <button id="check-cookies-btn">Check Cookies</button>
+          <button id="check-auth-btn">Check Authentication</button>
+          <button id="clear-storage-btn">Clear Storage</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Mock data
+    const mockData = {
+      votes: {
+        "feature-find": { "low": 5, "medium": 12, "high": 25 },
+        "feature-share": { "low": 3, "medium": 18, "high": 14 },
+        "feature-diary": { "low": 7, "medium": 9, "high": 11 }
+      },
+      subscriptions: {
+        "feature-find": ["user1@example.com", "user2@example.com"],
+        "feature-share": ["user3@example.com", "user4@example.com"],
+        "feature-diary": ["user5@example.com"],
+        "platform-android": ["android1@example.com", "android2@example.com"],
+        "platform-ios": ["ios1@example.com", "ios2@example.com", "ios3@example.com"]
+      }
+    };
+    
+    const featureNames = {
+      "feature-find": "MemojoFind",
+      "feature-share": "MemojoShare",
+      "feature-diary": "MemojoDiary",
+      "platform-android": "Android Beta",
+      "platform-ios": "iOS Beta"
+    };
+    
+    // Helper functions
+    function addLog(containerId, message, type = 'info') {
+      const logContainer = document.getElementById(containerId);
+      const entry = document.createElement('div');
+      entry.classList.add('log-entry', type);
+      
+      const timestamp = new Date().toLocaleTimeString();
+      entry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+      
+      logContainer.appendChild(entry);
+      logContainer.scrollTop = logContainer.scrollHeight;
+      
+      console.log(`[${type.toUpperCase()}] ${message}`);
+    }
+    
+    function setCookie(name, value, options = {}) {
+      options = {
+        path: '/',
+        // Add other defaults here if needed
+        ...options
+      };
+      
+      let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+      
+      for (let optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        let optionValue = options[optionKey];
+        if (optionValue !== true) {
+          updatedCookie += "=" + optionValue;
+        }
+      }
+      
+      document.cookie = updatedCookie;
+    }
+    
+    function getCookie(name) {
+      const matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    
+    function deleteCookie(name) {
+      setCookie(name, "", {
+        'max-age': -1
+      });
+    }
+    
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.getAttribute('data-tab');
+        
+        // Update active tab
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Show corresponding content
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+      });
+    });
+    
+    // Login simulation
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      addLog('login-log', `Attempting login with username: ${username}`, 'info');
+      
+      // Simulate the login request
+      if (username === 'admin' && password === 'memojo2025admin') {
+        addLog('login-log', 'Login successful!', 'success');
+        
+        // Create a JWT-like token (for simulation only)
+        const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjQ2NjU2MjQwLCJleHAiOjE2NDY2NTk4NDB9.simulated_signature`;
+        
+        // In a real implementation, the server would set an HTTP-only cookie
+        // For simulation, we'll set a regular cookie and also store a flag in sessionStorage
+        
+        // Set a cookie (in a real app, this would be HTTP-only, set by server)
+        addLog('login-log', 'Setting simulated token cookie', 'info');
+        
+        // Use our setCookie helper to create a client-side cookie
+        setCookie('simulatedToken', token, {
+          'max-age': 3600, // 1 hour
+          path: '/'
+        });
+        
+        // Set authentication flag in sessionStorage
+        sessionStorage.setItem('authenticated', 'true');
+        sessionStorage.setItem('username', username);
+        
+        addLog('login-log', 'Authentication status stored in session', 'success');
+        addLog('login-log', 'You are now logged in', 'success');
+        
+        // Update user display in dashboard
+        document.getElementById('user-display').textContent = `Logged in as: ${username}`;
+        
+        // Switch to dashboard tab after a delay
+        setTimeout(() => {
+          document.querySelector('[data-tab="dashboard"]').click();
+        }, 1000);
+      } else {
+        addLog('login-log', 'Invalid credentials', 'error');
+      }
+    });
+    
+    // Logout simulation
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      addLog('dashboard-log', 'Logging out...', 'info');
+      
+      // Clear authentication data
+      sessionStorage.removeItem('authenticated');
+      sessionStorage.removeItem('username');
+      
+      // Clear cookies
+      deleteCookie('simulatedToken');
+      
+      addLog('dashboard-log', 'Logged out successfully', 'success');
+      
+      // Update UI
+      document.getElementById('user-display').textContent = 'Not logged in';
+      
+      // Switch to login tab
+      setTimeout(() => {
+        document.querySelector('[data-tab="login"]').click();
+      }, 1000);
+    });
+    
+    // Fetch data simulation
+    document.getElementById('fetch-data-btn').addEventListener('click', () => {
+      addLog('dashboard-log', 'Fetching data...', 'info');
+      
+      // Check if authenticated
+      if (sessionStorage.getItem('authenticated') !== 'true') {
+        addLog('dashboard-log', 'Authentication required', 'error');
+        return;
+      }
+      
+      // Simulate successful data retrieval
+      setTimeout(() => {
+        addLog('dashboard-log', 'Data fetched successfully', 'success');
+        updateDashboard(mockData);
+      }, 500);
+    });
+    
+    // Update dashboard with data
+    function updateDashboard(data) {
+      // Update votes table
+      const votesTableBody = document.querySelector('#votes-table tbody');
+      votesTableBody.innerHTML = '';
+      
+      for (const featureId in data.votes) {
+        const featureVotes = data.votes[featureId];
+        const row = document.createElement('tr');
+        
+        const featureName = featureNames[featureId] || featureId;
+        
+        const lowCount = featureVotes.low || 0;
+        const mediumCount = featureVotes.medium || 0;
+        const highCount = featureVotes.high || 0;
+        const total = lowCount + mediumCount + highCount;
+        
+        row.innerHTML = `
+          <td>${featureName}</td>
+          <td>${lowCount}</td>
+          <td>${mediumCount}</td>
+          <td>${highCount}</td>
+          <td>${total}</td>
+        `;
+        
+        votesTableBody.appendChild(row);
+      }
+      
+      // Update subscriptions table
+      const subscriptionsTableBody = document.querySelector('#subscriptions-table tbody');
+      subscriptionsTableBody.innerHTML = '';
+      
+      for (const category in data.subscriptions) {
+        const emails = data.subscriptions[category];
+        const row = document.createElement('tr');
+        
+        const categoryName = featureNames[category] || category;
+        
+        row.innerHTML = `
+          <td>${categoryName}</td>
+          <td>${emails.length}</td>
+          <td>${emails.join(', ')}</td>
+        `;
+        
+        subscriptionsTableBody.appendChild(row);
+      }
+    }
+    
+    // Diagnostics tools
+    document.getElementById('check-cookies-btn').addEventListener('click', () => {
+      const cookieInfo = document.getElementById('cookie-info');
+      cookieInfo.innerHTML = '';
+      
+      const cookies = document.cookie.split(';').map(c => c.trim());
+      
+      if (cookies.length === 1 && cookies[0] === '') {
+        const entry = document.createElement('div');
+        entry.classList.add('log-entry', 'error');
+        entry.textContent = 'No cookies found';
+        cookieInfo.appendChild(entry);
+      } else {
+        const header = document.createElement('div');
+        header.classList.add('log-entry', 'info');
+        header.textContent = `Found ${cookies.length} cookies:`;
+        cookieInfo.appendChild(header);
+        
+        cookies.forEach(cookie => {
+          const [name, value] = cookie.split('=');
+          const entry = document.createElement('div');
+          entry.classList.add('log-entry', 'info');
+          entry.textContent = `${name}: ${value ? (value.length > 20 ? value.substring(0, 20) + '...' : value) : 'empty'}`;
+          cookieInfo.appendChild(entry);
+        });
+      }
+    });
+    
+    document.getElementById('check-auth-btn').addEventListener('click', () => {
+      const authStatus = document.getElementById('auth-status');
+      authStatus.innerHTML = '';
+      
+      const isAuthenticated = sessionStorage.getItem('authenticated') === 'true';
+      const username = sessionStorage.getItem('username') || 'None';
+      const token = getCookie('simulatedToken');
+      
+      const statusEntry = document.createElement('div');
+      statusEntry.classList.add('log-entry', isAuthenticated ? 'success' : 'error');
+      statusEntry.textContent = `Authentication Status: ${isAuthenticated ? 'Authenticated' : 'Not Authenticated'}`;
+      authStatus.appendChild(statusEntry);
+      
+      const userEntry = document.createElement('div');
+      userEntry.classList.add('log-entry', 'info');
+      userEntry.textContent = `Username: ${username}`;
+      authStatus.appendChild(userEntry);
+      
+      const tokenEntry = document.createElement('div');
+      tokenEntry.classList.add('log-entry', token ? 'success' : 'error');
+      tokenEntry.textContent = `Token Cookie: ${token ? 'Present' : 'Not Present'}`;
+      authStatus.appendChild(tokenEntry);
+    });
+    
+    document.getElementById('clear-storage-btn').addEventListener('click', () => {
+      // Clear session storage
+      sessionStorage.clear();
+      
+      // Clear cookies
+      document.cookie.split(";").forEach(cookie => {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+      });
+      
+      const authStatus = document.getElementById('auth-status');
+      authStatus.innerHTML = '';
+      
+      const entry = document.createElement('div');
+      entry.classList.add('log-entry', 'success');
+      entry.textContent = 'All storage cleared';
+      authStatus.appendChild(entry);
+      
+      // Update UI
+      document.getElementById('user-display').textContent = 'Not logged in';
+    });
+    
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      // Check initial authentication status
+      const isAuthenticated = sessionStorage.getItem('authenticated') === 'true';
+      const username = sessionStorage.getItem('username');
+      
+      if (isAuthenticated && username) {
+        document.getElementById('user-display').textContent = `Logged in as: ${username}`;
+      }
+      
+      // Diagnostics check
+      document.getElementById('check-cookies-btn').click();
+      document.getElementById('check-auth-btn').click();
+    });
+  </script>
+</body>
+</html>

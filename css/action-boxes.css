@@ -1,0 +1,259 @@
+/* Action container and blue action box styles */
+/* Action container for consistent spacing and centering */
+.action-container {
+    margin-top: 1.5rem;
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Blue action box styling */
+.blue-action-box {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.875rem 1.75rem;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.blue-action-box:hover {
+    background-color: #0056b3;
+    box-shadow: var(--shadow-md);
+}
+
+/* Interest button styling */
+.interest-button {
+    position: relative;
+    z-index: 15;
+}
+
+.dropdown-arrow {
+    margin-left: 8px;
+    font-size: 10px;
+    /* Keep the transition but don't apply it to transforms in mobile */
+    transition: color 0.3s ease;
+}
+
+.interest-button.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Interest dropdown styling */
+.interest-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    width: 250px;
+    max-width: 100%;
+    z-index: 20;
+    overflow: hidden;
+    display: none;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.interest-dropdown.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Ensure the dropdown stays open when the email form is visible */
+.interest-dropdown.active:hover,
+.interest-dropdown.active:focus-within {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Email form styling */
+.email-form {
+    padding: 16px;
+    border-top: 1px solid #f1f1f1;
+    background-color: #f9f9f9;
+    transition: var(--transition);
+    width: 100%;
+}
+
+.email-form.hidden {
+    display: none;
+}
+
+/* Poll option styling */
+.poll-option {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    text-align: left;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--dark-gray);
+    margin: 0;
+}
+
+.poll-option:last-of-type {
+    border-bottom: none;
+}
+
+.poll-option:hover {
+    background-color: var(--light-gray);
+}
+
+.signup-email {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.submit-email {
+    width: 100%;
+    padding: 8px 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.submit-email:hover {
+    background-color: #0056b3;
+}
+
+.interest-dropdown .poll-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 12px 20px;
+    border: none;
+    background: none;
+    color: var(--text-color);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.interest-dropdown .poll-option:last-child {
+    border-bottom: none;
+}
+
+.interest-dropdown .poll-option:hover {
+    background-color: #f7f7f7;
+}
+
+.interest-dropdown .poll-option.poll-option-voted {
+  color: var(--apple-green) !important; /* Light up in green */
+}
+
+.vote-count {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
+
+.email-success {
+    color: var(--apple-green);
+    font-weight: 500;
+    padding: 0.75rem;
+    animation: fadeIn 0.5s ease-out;
+    text-align: center;
+}
+
+/* Mobile responsiveness for interest buttons and dropdowns */
+@media (max-width: 768px) {
+    .interest-button {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 3rem; /* Add extra bottom margin for dropdown space */
+        position: relative;
+        z-index: 20;
+    }
+    
+    .interest-dropdown {
+        position: absolute;
+        top: calc(100% + 10px); /* Move dropdown further from button */
+        left: 50%;
+        transform: translateX(-50%); /* Remove Y transform to prevent movement */
+        width: 280px;
+        max-width: 90vw;
+        z-index: 25; /* Ensure dropdown appears above other elements */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* Stronger shadow for better visibility */
+    }
+    
+    .interest-dropdown.active {
+        display: block !important; /* Force display when active */
+        opacity: 1 !important;
+    }
+    
+    /* Make sure there's enough room at the bottom of the screen */
+    .feature-card {
+        margin-bottom: 5rem; /* Increased margin for feature cards */
+        padding-bottom: 4rem;
+        position: relative; /* Ensure proper stacking context */
+    }
+    
+    /* Increase the clickable area */
+    .poll-option {
+        padding: 15px 20px; /* Larger touch targets */
+        font-size: 1rem;
+    }
+    
+    /* Add more space for email submission form */
+    .email-form {
+        padding: 20px;
+    }
+    
+    .interest-button.active {
+        margin-bottom: 12rem; /* Extra space when dropdown is active */
+    }
+    
+    /* Ensure proper stacking context to avoid dropdown being cut off */
+    .features-grid {
+        overflow: visible !important;
+    }
+}
+
+/* Additional fixes for very small screens */
+@media (max-width: 480px) {
+    .interest-dropdown {
+        width: 260px;
+        max-width: 95vw;
+    }
+    
+    .interest-button {
+        margin-bottom: 4rem; /* Even more space on very small screens */
+    }
+    
+    .interest-button.active {
+        margin-bottom: 14rem; /* Extra space when dropdown is active on small screens */
+    }
+    
+    /* Ensure container can accommodate the dropdown */
+    .feature-card {
+        padding-bottom: 5rem;
+        margin-bottom: 6rem;
+    }
+}
