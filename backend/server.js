@@ -18,8 +18,8 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'memojo2025admin';
 
 // Middleware
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? 'https://yourproductiondomain.com' 
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://yourproductiondomain.com'
     : ['http://localhost:8000', 'http://127.0.0.1:8000'],
   credentials: true,
   optionsSuccessStatus: 200
@@ -33,7 +33,7 @@ app.use(session({
   secret: process.env.COOKIE_SECRET || 'memojo_development_cookie_secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { 
+  cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     sameSite: 'strict',
@@ -49,7 +49,7 @@ const readDb = () => {
   } catch (error) {
     console.error('Error reading database:', error);
     // If file doesn't exist or is corrupted, return a default structure
-    return { votes: {}, subscriptions: {} }; 
+    return { votes: {}, subscriptions: {} };
   }
 };
 
@@ -65,17 +65,17 @@ const writeDb = (data) => {
 // Authentication middleware
 const authenticateJWT = (req, res, next) => {
   console.log('🔒 Auth check for:', req.path);
-  
+
   // Check for token in cookies or Authorization header
   // Also check for adminToken to be compatible with frontend implementation
   const token = req.cookies.token || req.cookies.adminToken || req.headers.authorization?.split(' ')[1];
   console.log('🔍 Token found in request:', !!token);
-  
+
   if (!token) {
     console.log('❌ No token found, authentication required');
     return res.status(401).json({ message: 'Authentication required' });
   }
-  
+
   try {
     const user = jwt.verify(token, JWT_SECRET);
     console.log('✅ Token verified successfully for user:', user.username);
@@ -125,7 +125,7 @@ app.post('/api/subscribe', (req, res) => {
 
   const db = readDb();
   let subscriptionKey = '';
-  
+
   if (featureId) {
     subscriptionKey = featureId; // e.g., feature-share
     if (!db.subscriptions[subscriptionKey]) {
@@ -133,7 +133,7 @@ app.post('/api/subscribe', (req, res) => {
     }
   } else if (platform) {
     subscriptionKey = `platform-${platform.toLowerCase()}`; // e.g., platform-android
-     if (!db.subscriptions[subscriptionKey]) {
+    if (!db.subscriptions[subscriptionKey]) {
       db.subscriptions[subscriptionKey] = [];
     }
   }
@@ -157,21 +157,21 @@ app.get('/api/status', (req, res) => {
 // Login endpoint
 app.post('/api/auth/login', (req, res) => {
   console.log('🔐 Login attempt received:', { username: req.body.username });
-  
+
   const { username, password } = req.body;
-  
+
   // Validate credentials
   if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
     console.log('❌ Login failed: Invalid credentials');
     return res.status(401).json({ message: 'Invalid credentials' });
   }
-  
+
   console.log('✅ Credentials validated successfully');
-  
+
   // Create JWT token
   const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '1h' });
   console.log('🔑 JWT token created');
-  
+
   // Set tokens as HTTP-only cookies (both names for compatibility)
   // Standard name used by backend
   res.cookie('token', token, {
@@ -188,7 +188,7 @@ app.post('/api/auth/login', (req, res) => {
     maxAge: 3600000 // 1 hour
   });
   console.log('🍪 Cookies set with token');
-  
+
   res.status(200).json({ message: 'Authentication successful', token });
   console.log('📤 Login response sent with token');
 });
@@ -223,6 +223,11 @@ app.use((req, res, next) => {
 // Serve static files from root directory
 app.use(express.static(path.join(__dirname, '..')));
 
+// Open privacy modal
+app.get('/privacy', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // Serve admin files
 app.use('/admin', express.static(path.join(__dirname, '..', 'admin')));
 
@@ -245,21 +250,21 @@ app.listen(PORT, () => {
   // Ensure db.json exists with default structure if it's empty or new
   const db = readDb();
   if (Object.keys(db.votes).length === 0 && Object.keys(db.subscriptions).length === 0) {
-      const defaultDb = {
-          votes: {
-              "feature-find": { "low": 0, "medium": 0, "high": 0 },
-              "feature-share": { "low": 0, "medium": 0, "high": 0 },
-              "feature-diary": { "low": 0, "medium": 0, "high": 0 }
-          },
-          subscriptions: {
-              "feature-find": [],
-              "feature-share": [],
-              "feature-diary": [],
-              "platform-android": [],
-              "platform-ios": []
-          }
-      };
-      writeDb(defaultDb);
-      console.log('Initialized db.json with default structure.');
+    const defaultDb = {
+      votes: {
+        "feature-find": { "low": 0, "medium": 0, "high": 0 },
+        "feature-share": { "low": 0, "medium": 0, "high": 0 },
+        "feature-diary": { "low": 0, "medium": 0, "high": 0 }
+      },
+      subscriptions: {
+        "feature-find": [],
+        "feature-share": [],
+        "feature-diary": [],
+        "platform-android": [],
+        "platform-ios": []
+      }
+    };
+    writeDb(defaultDb);
+    console.log('Initialized db.json with default structure.');
   }
 });
