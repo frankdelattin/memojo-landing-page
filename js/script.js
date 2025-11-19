@@ -424,29 +424,84 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Privacy modal functionality
+    // Privacy modal functionality with URL handling
     const privacyBtn = document.getElementById('privacyModal');
     const modal = document.getElementById('privacy-modal');
     const closeModal = document.querySelector('.close-modal');
-    
-    if (privacyBtn && modal && closeModal) {
-        privacyBtn.addEventListener('click', function() {
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
-        });
-        
-        closeModal.addEventListener('click', function() {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto'; // Re-enable scrolling
-        });
-        
-        // Close modal when clicking outside the modal content
-        window.addEventListener('click', function(e) {
-            if (e.target === modal) {
+
+    // Helper functions to open/close modal and manage history
+    function showPrivacyModal(pushState = false) {
+        if (!modal) return;
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+
+        // If requested, push a history entry to `/privacy` so back button works
+        try {
+            if (pushState) {
+                history.pushState({ modal: 'privacy' }, '', '/privacy');
+            } else {
+                // If user landed on `/privacy` directly we don't create a new entry.
+            }
+        } catch (err) {
+            console.warn('History API not available:', err);
+        }
+    }
+
+    function hidePrivacyModal() {
+        if (!modal) return;
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Re-enable scrolling
+
+        // If our history state indicates we pushed `/privacy`, go back rather than replacing URL blindly
+        try {
+            if (history.state && history.state.modal === 'privacy') {
+                history.back();
+            } else if (location.pathname === '/privacy') {
+                // If user navigated directly to /privacy (no state), replace the URL to root
+                history.replaceState({}, '', '/');
+            }
+        } catch (err) {
+            console.warn('History API not available:', err);
+        }
+    }
+
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', function(e) {
+        // If the current path is /privacy, ensure modal is open
+        if (location.pathname === '/privacy' || (e.state && e.state.modal === 'privacy')) {
+            showPrivacyModal(false);
+        } else {
+            // Otherwise, close the modal if it's open
+            if (modal && modal.style.display === 'block') {
                 modal.style.display = 'none';
                 document.body.style.overflow = 'auto';
             }
+        }
+    });
+
+    if (privacyBtn && modal && closeModal) {
+        privacyBtn.addEventListener('click', function(e) {
+            // If this is an anchor, prevent default navigation and open modal via history
+            if (e && e.preventDefault) e.preventDefault();
+            showPrivacyModal(true);
         });
+
+        closeModal.addEventListener('click', function() {
+            hidePrivacyModal();
+        });
+
+        // Close modal when clicking outside the modal content
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                hidePrivacyModal();
+            }
+        });
+    }
+
+    // On initial load, if URL path is `/privacy`, open the modal
+    if (location.pathname === '/privacy') {
+        // Show modal but don't push state (user already at /privacy)
+        showPrivacyModal(false);
     }
     
     // Form submission handling

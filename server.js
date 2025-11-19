@@ -12,8 +12,14 @@ app.use((req, res, next) => {
   next();
 });
 
+// Open privacy modal
+app.get('/privacy', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
   console.log(`Admin login page: http://localhost:${PORT}/admin/simple-admin.html`);
+  console.log(`Privacy page: http://localhost:${PORT}/privacy`);
 });
