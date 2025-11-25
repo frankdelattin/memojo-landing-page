@@ -10,5 +10,11 @@
     "target": "/backend/db.json",
     "status": "200",
     "condition": null
+  },
+  {
+    "source": "/privacy",
+    "target": "/index.html",
+    "status": "200",
+    "condition": null
   }
 ]
