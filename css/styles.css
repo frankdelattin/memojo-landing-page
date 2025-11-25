@@ -553,11 +553,12 @@ nav ul li a:hover::after {
     opacity: 0.7;
 }
 
-/* Join Beta Section */
 .join-beta {
     background-color: var(--light-gray);
     text-align: center;
+    padding-bottom: 6rem;
 }
+
 
 .join-beta h2 {
     margin-bottom: 1rem;
@@ -1404,29 +1405,47 @@ section::after {
     }
 
 }
-    /* Footer social icon sizing: keep SVG contained to link size */
-    .footer-social .social-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 36px;
-        height: 36px;
-        padding: 6px;
-    }
+.footer-social .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+}
 
-    .footer-social .social-icon-img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        max-width: 24px;
-        max-height: 24px;
-        object-fit: contain;
-    }
+/* Ensure any button-based icons in footer match sizing */
+.footer-social .social-icon[role="button"],
+.footer-social button.social-icon {
+    width: 36px;
+    height: 36px;
+}
 
-    /* Ensure any button-based icons in footer match sizing */
-    .footer-social .social-icon[role="button"],
-    .footer-social button.social-icon {
-        width: 36px;
-        height: 36px;
-    }
 
+.join-social {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.join-social .social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 6px;
+    color: var(--text-color);
+}
+
+/* Ensure image-based SVGs used as icons are constrained */
+.social-icon-img {
+    width: 24px !important;
+    height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+    object-fit: contain !important;
+    display: block;
+}
