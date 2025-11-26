@@ -1173,6 +1173,9 @@ section::after {
     box-shadow: var(--shadow-sm);
     text-align: center;
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .cta-item:hover {
