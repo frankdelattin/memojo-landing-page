@@ -589,7 +589,7 @@ nav ul li a:hover::after {
     padding: 3rem 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-sm);
-    max-width: 400px;
+    max-width: 475px;
     width: 100%;
     transition: var(--transition);
 }
@@ -833,7 +833,7 @@ footer {
 .status-badge {
   /* Core styling */
   color: white !important;
-  
+
   /* Box model */
   display: inline-block;
   width: auto;
@@ -842,11 +842,11 @@ footer {
   box-sizing: border-box;
   height: 36px;
   line-height: 20px;
-  
+
   /* Typography */
   font-size: 0.875rem;
   font-weight: 500;
-  
+
   /* Shape */
   border-radius: 20px;
 }
@@ -1279,53 +1279,53 @@ section::after {
     h1 {
         font-size: 3rem;
     }
-    
+
     h2 {
         font-size: 2.25rem;
     }
-    
+
     .hero .container {
         flex-direction: column;
     }
-    
+
     .hero-content {
         max-width: 100%;
         text-align: center;
         margin-bottom: 4rem;
     }
-    
+
     .cta-buttons {
         justify-content: center;
     }
-    
+
     .hero-image {
         justify-content: center;
     }
-    
+
     .feature-slide.active {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .feature-content {
         max-width: 100%;
     }
-    
+
     .vision .container {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .vision-content {
         max-width: 100%;
         margin-bottom: 2rem;
     }
-    
+
     .footer-content {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .footer-links {
         flex-direction: column;
         gap: 1rem;
@@ -1336,37 +1336,37 @@ section::after {
     h1 {
         font-size: 2.5rem;
     }
-    
+
     h2 {
         font-size: 2rem;
     }
-    
+
     section {
         padding: 4rem 0;
     }
-    
+
     .hero {
         padding: 8rem 0 4rem;
     }
-    
+
     .cta-buttons {
         flex-direction: column;
     }
-    
+
     .phone-mockup {
         width: 240px;
         height: 500px;
     }
-    
+
     .join-options {
         gap: 1.5rem;
     }
-    
+
     .modal-content {
         padding: 2rem;
         margin: 5vh auto;
     }
-    
+
     .poll-options {
         flex-direction: column;
     }
@@ -1376,32 +1376,32 @@ section::after {
     header {
         padding: 0.75rem 0;
     }
-    
+
     nav ul li {
         margin-left: 1rem;
     }
-    
+
     h1 {
         font-size: 2.25rem;
     }
-    
+
     h2 {
         font-size: 1.75rem;
     }
-    
+
     .hero-content p {
         font-size: 1.1rem;
     }
-    
+
     .phone-mockup {
         width: 200px;
         height: 420px;
     }
-    
+
     .feature-card {
         padding: 1.5rem;
     }
-    
+
     .message-box {
         padding: 2rem;
     }
